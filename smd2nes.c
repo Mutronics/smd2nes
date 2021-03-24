@@ -33,17 +33,17 @@ ISR(INT1_vect)
 
 int main (void)
 {
-	set_bit(DDRD, 0); // Данные - на выход
-	unset_bit2(DDRD, 2, 3); // clock, strobe - на ввод
-	DDRB = 0; // Кнопки на ввод
-	PORTB = 0xFF; // Подтяжка кнопок
-	set_bit2(MCUCR, ISC11, ISC10); // Прерывание при растущем strobe
-	set_bit2(MCUCR, ISC01, ISC00); // Прерывание при растущем  clock
-	set_bit(GICR, INT0); set_bit(GICR, INT1); // Активируем их
+	set_bit(DDRD, 0); // Р”Р°РЅРЅС‹Рµ - РЅР° РІС‹С…РѕРґ
+	unset_bit2(DDRD, 2, 3); // clock, strobe - РЅР° РІРІРѕРґ
+	DDRB = 0; // РљРЅРѕРїРєРё РЅР° РІРІРѕРґ
+	PORTB = 0xFF; // РџРѕРґС‚СЏР¶РєР° РєРЅРѕРїРѕРє
+	set_bit2(MCUCR, ISC11, ISC10); // РџСЂРµСЂС‹РІР°РЅРёРµ РїСЂРё СЂР°СЃС‚СѓС‰РµРј strobe
+	set_bit2(MCUCR, ISC01, ISC00); // РџСЂРµСЂС‹РІР°РЅРёРµ РїСЂРё СЂР°СЃС‚СѓС‰РµРј  clock
+	set_bit(GICR, INT0); set_bit(GICR, INT1); // РђРєС‚РёРІРёСЂСѓРµРј РёС…
 	
 	init_smd_gamepad();
 
-	sei(); // Глобальная активация прерываний
+	sei(); // Р“Р»РѕР±Р°Р»СЊРЅР°СЏ Р°РєС‚РёРІР°С†РёСЏ РїСЂРµСЂС‹РІР°РЅРёР№
 	
 	// Right, Left, Down, Up, Start, Select, B, A
 	while(1)		
