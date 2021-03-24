@@ -11,3 +11,8 @@
 #define SMD_DATA4_PIN 4
 #define SMD_DATA5_PIN 5
 
+//#define SNES_ENABLED
+//#define SNES_PORT B
+//#define SNES_LATCH_PIN 3
+//#define SNES_CLOCK_PIN 4
+//#define SNES_DATA_PIN 5
