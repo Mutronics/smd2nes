@@ -1,9 +1,10 @@
 #include "defines.h"
-#include "gamepad.h"
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <util/delay.h>
+#include <avr/eeprom.h>
 #include "bits.h"
+#include "gamepad.h"
 
 volatile uint8_t button_data;
 volatile uint8_t shift;
@@ -15,7 +16,7 @@ ISR(INT0_vect)
 	shift <<= 1;
 	if (button_data & shift)
 		PORTD = 1;
-	else 
+	else
 		PORTD = 0;
 }
 
@@ -25,10 +26,10 @@ ISR(INT1_vect)
 	shift = 1;
 	if (button_data & shift)
 		PORTD = 1;
-	else 
+	else
 		PORTD = 0;
 	turbo++;
-	turbo %= 4;		
+	turbo %= 4;
 }
 
 int main (void)
@@ -40,13 +41,11 @@ int main (void)
 	set_bit2(MCUCR, ISC11, ISC10); // Прерывание при растущем strobe
 	set_bit2(MCUCR, ISC01, ISC00); // Прерывание при растущем  clock
 	set_bit(GICR, INT0); set_bit(GICR, INT1); // Активируем их
-	
 	init_smd_gamepad();
-
 	sei(); // Глобальная активация прерываний
 	
 	// Right, Left, Down, Up, Start, Select, B, A
-	while(1)		
+	while(1)
 	{
 		uint8_t nes_temp_data = 0xff;
 		int b, c;
@@ -67,8 +66,9 @@ int main (void)
 							case 1: // Down
 								unset_bit(nes_temp_data, 5);
 								break;
-							case 4: // A(SMD)/Select(NES)
-								unset_bit(nes_temp_data, 2);
+							case 4: // A(SMD)/A+B(NES)
+								unset_bit(nes_temp_data, 0);
+								unset_bit(nes_temp_data, 1);
 								break;
 							case 5: // Start
 								unset_bit(nes_temp_data, 3);
@@ -96,7 +96,8 @@ int main (void)
 						switch (b)
 						{
 							case 4: // A(SMD)/Select(NES)
-								unset_bit(nes_temp_data, 2);
+								unset_bit(nes_temp_data, 0);
+								unset_bit(nes_temp_data, 1);
 								break;
 							case 5: // Start
 								unset_bit(nes_temp_data, 3);
@@ -110,7 +111,10 @@ int main (void)
 									unset_bit(nes_temp_data, 1);
 								break;
 							case 10: // X(SMD)/Select(NES)
-								unset_bit(nes_temp_data, 2);
+								if (turbo >= 2) {
+									unset_bit(nes_temp_data, 0);
+									unset_bit(nes_temp_data, 1);
+								}
 								break;
 							case 11: // Mode(SMD)/Select(NES)
 								unset_bit(nes_temp_data, 2);
@@ -119,11 +123,8 @@ int main (void)
 					}
 				}
 			}
-		}	
-	
+		}
 		button_data = nes_temp_data;
 		_delay_ms(2);
 	}
 }
-
-
