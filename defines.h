@@ -1,4 +1,4 @@
-#define F_CPU 8000000L
+#define F_CPU 6000000L
 
 #define SMD_ENABLED
 #define SMD_SELECT_PORT B
